@@ -8,68 +8,8 @@ c.fillRect(0, 0, canvas.width, canvas.height)
 
 const gravity = 0.7
 
-class Sprite {
-    constructor({ position, velocity, color, offset }) {
-        this.position = position
-        this.velocity = velocity
-        this.width = 50
-        this.height = 150
-        this.lastKey
-        this.attackBox = {
-            position: {
-                x: this.position.x,
-                y: this.position.y
-            },
-            offset,
-            width: 100,
-            height: 50
-        }
-        this.color = color
-        this.isAttacking
-        this.health = 100
-    }
-
-    draw() {
-        c.fillStyle = this.color
-        c.fillRect(this.position.x, this.position.y, this.width, this.height)
-
-        // Attack Box
-        if (this.isAttacking) {
-            c.fillStyle = 'green'
-            c.fillRect(
-                this.attackBox.position.x, 
-                this.attackBox.position.y, 
-                this.attackBox.width, 
-                this.attackBox.height
-            )
-        }
-    }
-
-    update() {
-        this.draw()
-        this.attackBox.position.x = this.position.x + this.attackBox.offset.x
-        this.attackBox.position.y = this.position.y
-
-        this.position.x += this.velocity.x
-        this.position.y += this.velocity.y
-
-        if (this.position.y + this.height + this.velocity.y >= canvas.height) {
-            this.velocity.y = 0
-        } else {
-            this.velocity.y += gravity
-        }
-    }
-
-    attack() {
-        this.isAttacking = true
-        setTimeout(()=> {
-            this.isAttacking = false
-        }, 100)
-    }
-}
-
 // Player Sprite
-const player = new Sprite({
+const player = new Fighter({
     position: {
         x: 0,
         y: 0
@@ -86,7 +26,7 @@ const player = new Sprite({
 })
 
 // Enemy Sprite
-const enemy = new Sprite({
+const enemy = new Fighter({
     position: {
         x: 400,
         y: 100
@@ -191,7 +131,7 @@ function animate() {
         player.isAttacking
     ) {    
         player.isAttacking = false
-        enemy.health -= 20
+        enemy.health -= 10
         document.querySelector('#enemyHealth').style.width = enemy.health + '%'
         console.log('player hit!')
     }
@@ -204,7 +144,7 @@ function animate() {
         enemy.isAttacking
     ) {    
         enemy.isAttacking = false
-        player.health -= 20
+        player.health -= 10
         document.querySelector('#playerHealth').style.width = player.health + '%'
         console.log('enemy hit!')
     }
@@ -212,7 +152,7 @@ function animate() {
     // switch attack position 
     if ( enemy.position.x <= player.position.x
     ) {
-        enemy.attackBox.offset.x = 50
+        enemy.attackBox.offset.x = 0
     } else {
         enemy.attackBox.offset.x = -50
     }
@@ -221,7 +161,7 @@ function animate() {
     ) {
         player.attackBox.offset.x = -50
     } else {
-        player.attackBox.offset.x = 50
+        player.attackBox.offset.x = 0
     }
 
     // End Game based on Health
