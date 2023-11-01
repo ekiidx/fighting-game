@@ -62,6 +62,10 @@ const player = new Fighter({
         jump: {
             imageSrc: './assets/img/bunnygirl/jump.png',
             framesMax: 4
+        },
+        fall: {
+            imageSrc: './assets/img/bunnygirl/fall.png',
+            framesMax: 4
         }
     }
 })
@@ -126,8 +130,11 @@ function animate() {
         player.switchSprite('idle')
     }
 
+    // Jumping
     if (player.velocity.y < 0) {
        player.switchSprite('jump')
+    } else if (player.velocity.y > 0) {
+        player.switchSprite('fall')
     }
 
     // Enemy Movement
