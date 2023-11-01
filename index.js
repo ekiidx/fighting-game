@@ -47,8 +47,22 @@ const player = new Fighter({
     framesMax: 6,
     scale: 4,
     offset: {
-        x: 0,
+        x: 215,
         y: -54
+    },
+    sprites: {
+        idle: {
+            imageSrc: './assets/img/bunnygirl/idle.png',
+            framesMax: 6
+        },
+        run: {
+            imageSrc: './assets/img/bunnygirl/run.png',
+            framesMax: 12
+        },
+        jump: {
+            imageSrc: './assets/img/bunnygirl/jump.png',
+            framesMax: 4
+        }
     }
 })
 
@@ -101,10 +115,19 @@ function animate() {
     enemy.velocity.x = 0
 
     // Player Movement
+    
     if (keys.a.pressed && player.lastKey === 'a') {
         player.velocity.x = -5
+        player.switchSprite('run')
     } else if (keys.d.pressed && player.lastKey ==='d') {
         player.velocity.x = 5
+        player.switchSprite('run')
+    } else {
+        player.switchSprite('idle')
+    }
+
+    if (player.velocity.y < 0) {
+       player.switchSprite('jump')
     }
 
     // Enemy Movement
