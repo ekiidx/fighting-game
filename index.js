@@ -66,6 +66,10 @@ const player = new Fighter({
         fall: {
             imageSrc: './assets/img/bunnygirl/fall.png',
             framesMax: 4
+        },
+        attack: {
+            imageSrc: './assets/img/bunnygirl/attack.png',
+            framesMax: 5
         }
     }
 })
@@ -84,6 +88,35 @@ const enemy = new Fighter({
     offset: {
         x: -50,
         y: 0
+    },
+    imageSrc: './assets/img/bunnygirl/idle.png',
+    framesMax: 6,
+    scale: 4,
+    offset: {
+        x: 215,
+        y: -54
+    },
+    sprites: {
+        idle: {
+            imageSrc: './assets/img/bunnygirl/idle.png',
+            framesMax: 6
+        },
+        run: {
+            imageSrc: './assets/img/bunnygirl/run.png',
+            framesMax: 12
+        },
+        jump: {
+            imageSrc: './assets/img/bunnygirl/jump.png',
+            framesMax: 4
+        },
+        fall: {
+            imageSrc: './assets/img/bunnygirl/fall.png',
+            framesMax: 4
+        },
+        attack: {
+            imageSrc: './assets/img/bunnygirl/attack.png',
+            framesMax: 5
+        }
     }
 })
 
@@ -172,19 +205,19 @@ function animate() {
     }
 
     // switch attack position 
-    if ( enemy.position.x <= player.position.x
-    ) {
-        enemy.attackBox.offset.x = 0
-    } else {
-        enemy.attackBox.offset.x = -50
-    }
+    // if ( enemy.position.x <= player.position.x
+    // ) {
+    //     enemy.attackBox.offset.x = 0
+    // } else {
+    //     enemy.attackBox.offset.x = -50
+    // }
 
-    if ( player.position.x >= enemy.position.x
-    ) {
-        player.attackBox.offset.x = -50
-    } else {
-        player.attackBox.offset.x = 0
-    }
+    // if ( player.position.x >= enemy.position.x
+    // ) {
+    //     player.attackBox.offset.x = -50
+    // } else {
+    //     player.attackBox.offset.x = 0
+    // }
 
     // End Game based on Health
     if (enemy.health <= 0 || player.health <= 0) {
