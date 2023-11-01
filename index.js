@@ -42,6 +42,13 @@ const player = new Fighter({
     offset: {
         x: 0,
         y: 0
+    },
+    imageSrc: './assets/img/bunnygirl/idle.png',
+    framesMax: 6,
+    scale: 4,
+    offset: {
+        x: 0,
+        y: -54
     }
 })
 
@@ -88,7 +95,7 @@ function animate() {
     background.update()
     fox.update()
     player.update()
-    enemy.update()
+    //enemy.update()
 
     player.velocity.x = 0
     enemy.velocity.x = 0
