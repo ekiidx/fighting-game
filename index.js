@@ -45,7 +45,7 @@ const player = new Fighter({
     },
     imageSrc: './assets/img/bunnygirl/idle.png',
     framesMax: 6,
-    scale: 4,
+    scale: 1.33,
     offset: {
         x: 215,
         y: -54
@@ -89,33 +89,33 @@ const enemy = new Fighter({
         x: -50,
         y: 0
     },
-    imageSrc: './assets/img/bunnygirl/idle.png',
-    framesMax: 6,
-    scale: 4,
+    imageSrc: './assets/img/enemy/idle.png',
+    framesMax: 10,
+    scale: 1.1,
     offset: {
         x: 215,
-        y: -54
+        y: 88
     },
     sprites: {
         idle: {
-            imageSrc: './assets/img/bunnygirl/idle.png',
-            framesMax: 6
+            imageSrc: './assets/img/enemy/idle.png',
+            framesMax: 10
         },
         run: {
-            imageSrc: './assets/img/bunnygirl/run.png',
-            framesMax: 12
+            imageSrc: './assets/img/enemy/run.png',
+            framesMax: 10
         },
         jump: {
-            imageSrc: './assets/img/bunnygirl/jump.png',
-            framesMax: 4
+            imageSrc: './assets/img/enemy/jump.png',
+            framesMax: 3
         },
         fall: {
-            imageSrc: './assets/img/bunnygirl/fall.png',
-            framesMax: 4
+            imageSrc: './assets/img/enemy/fall.png',
+            framesMax: 3
         },
         attack: {
-            imageSrc: './assets/img/bunnygirl/attack.png',
-            framesMax: 5
+            imageSrc: './assets/img/enemy/attack.png',
+            framesMax: 6
         }
     }
 })
@@ -146,7 +146,7 @@ function animate() {
     background.update()
     fox.update()
     player.update()
-    //enemy.update()
+    enemy.update()
 
     player.velocity.x = 0
     enemy.velocity.x = 0
@@ -173,8 +173,19 @@ function animate() {
     // Enemy Movement
     if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
         enemy.velocity.x = -5
+        enemy.switchSprite('run')
     } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
         enemy.velocity.x = 5
+        enemy.switchSprite('run')
+    } else {
+        enemy.switchSprite('idle')
+    }
+
+    // Jumping
+    if (enemy.velocity.y < 0) {
+        enemy.switchSprite('jump')
+    } else if (player.velocity.y > 0) {
+        enemy.switchSprite('fall')
     }
 
     // Collision
