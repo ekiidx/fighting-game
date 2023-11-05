@@ -60,7 +60,8 @@ class Fighter extends Sprite {
         scale = 1, 
         framesMax = 1,
         offset = { x: 0, y: 0 },
-        sprites
+        sprites,
+        attackBox = { offset: {}, width: undefined, height: undefined }
     }) {
         super({
             position,
@@ -78,9 +79,9 @@ class Fighter extends Sprite {
                 x: this.position.x,
                 y: this.position.y
             },
-            offset,
-            width: 100,
-            height: 50
+            offset: attackBox.offset,
+            width: attackBox.width,
+            height: attackBox.height
         }
         this.color = color
         this.isAttacking
@@ -100,11 +101,20 @@ class Fighter extends Sprite {
         this.draw()
         this.animateFrames()
         
+        // Attack Boxes
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x
-        this.attackBox.position.y = this.position.y
+        this.attackBox.position.y = this.position.y + this.attackBox.offset.y
 
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
+
+        // Draw the attack box
+        // c.fillRect(
+        //     this.attackBox.position.x, 
+        //     this.attackBox.position.y, 
+        //     this.attackBox.width,
+        //     this.attackBox.height
+        // )
 
         // Gravity function
         if (this.position.y + this.height + this.velocity.y >= canvas.height - 110) {
@@ -118,17 +128,43 @@ class Fighter extends Sprite {
     attack() {
         this.switchSprite('attack')
         this.isAttacking = true
-        setTimeout(()=> {
-            this.isAttacking = false
-        }, 100)
+        // setTimeout(()=> {
+        //     this.isAttacking = false
+        // }, 1000)
+    }
+
+    hit() {
+        this.health -= 10
+
+        if (this.health <= 0 ) {
+            this.switchSprite('death')
+        } else { 
+            this.switchSprite('hit')
+        }
     }
 
     switchSprite(sprite) {
+        // Overriding all other animations with death
+        if (this.image === this.sprites.death.image 
+        ) {
+            return
+        }
+        
+        // Overriding all other animations with attack animation
         if (this.image === this.sprites.attack.image && 
             this.framesCurrent < this.sprites.attack.framesMax - 1
         ) {
             return
         }
+
+        // Overriding all other animations with hit when player is hit
+        if ( 
+            this.image === this.sprites.hit.image && 
+            this.framesCurrent < this.sprites.hit.framesMax - 1
+        ) {
+            return
+        }
+
         switch (sprite) {
             case 'idle':
                 if (this.image !== this.sprites.idle.image) {
@@ -162,6 +198,20 @@ class Fighter extends Sprite {
                 if (this.image !== this.sprites.attack.image) {
                     this.image = this.sprites.attack.image
                     this.framesMax = this.sprites.attack.framesMax
+                    this.framesCurrent = 0
+                }
+                break
+            case 'hit':
+                if (this.image !== this.sprites.hit.image) {
+                    this.image = this.sprites.hit.image
+                    this.framesMax = this.sprites.hit.framesMax
+                    this.framesCurrent = 0
+                }
+                break
+            case 'death':
+                if (this.image !== this.sprites.death.image) {
+                    this.image = this.sprites.death.image
+                    this.framesMax = this.sprites.death.framesMax
                     this.framesCurrent = 0
                 }
                 break

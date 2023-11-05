@@ -44,7 +44,7 @@ const player = new Fighter({
         y: 0
     },
     imageSrc: './assets/img/bunnygirl/idle.png',
-    framesMax: 6,
+    framesMax: 12,
     scale: 1.33,
     offset: {
         x: 215,
@@ -70,7 +70,23 @@ const player = new Fighter({
         attack: {
             imageSrc: './assets/img/bunnygirl/attack.png',
             framesMax: 5
+        },
+        hit: {
+            imageSrc: './assets/img/bunnygirl/hit.png',
+            framesMax: 4
+        },
+        death: {
+            imageSrc: './assets/img/bunnygirl/death.png',
+            framesMax: 8
         }
+    },
+    attackBox: {
+        offset: {
+            x: -80,
+            y: 60
+        },
+        width: 100,
+        height: 100
     }
 })
 
@@ -116,7 +132,23 @@ const enemy = new Fighter({
         attack: {
             imageSrc: './assets/img/enemy/attack.png',
             framesMax: 6
+        },
+        hit: {
+            imageSrc: './assets/img/enemy/hit.png',
+            framesMax: 3
+        },
+        death: {
+            imageSrc: './assets/img/enemy/death.png',
+            framesMax: 10
         }
+    },
+    attackBox: {
+        offset: {
+            x: -170,
+            y: 60
+        },
+        width: 130,
+        height: 100
     }
 })
 
@@ -152,7 +184,6 @@ function animate() {
     enemy.velocity.x = 0
 
     // Player Movement
-    
     if (keys.a.pressed && player.lastKey === 'a') {
         player.velocity.x = -5
         player.switchSprite('run')
@@ -163,7 +194,7 @@ function animate() {
         player.switchSprite('idle')
     }
 
-    // Jumping
+    // Player Jumping
     if (player.velocity.y < 0) {
        player.switchSprite('jump')
     } else if (player.velocity.y > 0) {
@@ -181,39 +212,52 @@ function animate() {
         enemy.switchSprite('idle')
     }
 
-    // Jumping
+    // Enemy Jumping
     if (enemy.velocity.y < 0) {
         enemy.switchSprite('jump')
-    } else if (player.velocity.y > 0) {
+    } else if (enemy.velocity.y > 0) {
         enemy.switchSprite('fall')
     }
 
-    // Collision
+    // Player Collision & hit
     if ( 
         rectangularCollision({
             rectangle1: player,
             rectangle2: enemy
         }) &&
-        player.isAttacking
+        player.isAttacking && 
+        player.framesCurrent === 3
     ) {    
+        enemy.hit()
         player.isAttacking = false
-        enemy.health -= 10
         document.querySelector('#enemyHealth').style.width = enemy.health + '%'
-        console.log('player hit!')
+        //console.log('player hit!')
     }
 
+    // If player misses
+    if (player.isAttacking && player.framesCurrent === 3) {
+        player.isAttacking = false
+    }
+
+    // Enemy Collision & hit
     if ( 
         rectangularCollision({
             rectangle1: enemy,
             rectangle2: player
         }) &&
-        enemy.isAttacking
-    ) {    
+        enemy.isAttacking && 
+        enemy.framesCurrent === 3
+    ) { 
+        player.hit()
         enemy.isAttacking = false
-        player.health -= 10
         document.querySelector('#playerHealth').style.width = player.health + '%'
-        console.log('enemy hit!')
+        //console.log('enemy hit!')
     }
+
+        // If enemy misses
+        if (enemy.isAttacking && enemy.framesCurrent === 3) {
+            enemy.isAttacking = false
+        }
 
     // switch attack position 
     // if ( enemy.position.x <= player.position.x
